@@ -62,10 +62,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issues.show');
 });
 Route::get('/setup-db', function () {
+    // 1. Xóa sạch bộ nhớ tạm (Cache) để nó quên cái 127.0.0.1 đi
+    \Illuminate\Support\Facades\Artisan::call('config:clear');
+    \Illuminate\Support\Facades\Artisan::call('cache:clear');
+    
+    // 2. Bơm dữ liệu
     \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
         '--force' => true,
         '--seed' => true
     ]);
-    return 'Bơm dữ liệu thành công xuất sắc! Quay lại trang chủ test thôi!';
+    
+    return 'Xóa trí nhớ cũ và Bơm dữ liệu thành công';
 });
 require __DIR__.'/auth.php';
