@@ -61,4 +61,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/issues', [IssueController::class, 'store'])->name('issues.store');
     Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issues.show');
 });
+Route::get('/setup-db', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+        '--force' => true,
+        '--seed' => true
+    ]);
+    return 'Bơm dữ liệu thành công xuất sắc! Quay lại trang chủ test thôi!';
+});
 require __DIR__.'/auth.php';
