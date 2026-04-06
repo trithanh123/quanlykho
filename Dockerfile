@@ -1,28 +1,18 @@
-# --- Giai đoạn 1: Build giao diện (Node.js) ---
-FROM node:20-alpine AS node_builder
-WORKDIR /app
-COPY . .
-RUN npm install && npm run build
-
-# --- Giai đoạn 2: Chạy Web (PHP) ---
 FROM php:8.2-apache
 
-# Cài đặt các thư viện hệ thống (Chỉ lấy cái thực sự cần để nhẹ máy)
+# Chỉ cài những thư viện bắt buộc cho Database
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev zip unzip git libpq-dev \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql gd
+    libpng-dev libjpeg-dev libfreetype6-dev zip unzip libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
-# Bật mod_rewrite cho Laravel
+# Bật mod_rewrite
 RUN a2enmod rewrite
-
-# Chuyển vào thư mục web
 WORKDIR /var/www/html
 
-# Copy code từ máy và copy kết quả build từ Giai đoạn 1 sang
+# Copy code
 COPY . .
-COPY --from=node_builder /app/public/build ./public/build
 
-# Cấu hình Apache trỏ vào thư mục public
+# Cấu hình thư mục Public
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
@@ -31,7 +21,6 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Cấp quyền
+# Cấp quyền lưu trữ
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
 EXPOSE 80
