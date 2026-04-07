@@ -23,4 +23,8 @@ RUN composer install --no-dev --optimize-autoloader
 
 # Cấp quyền lưu trữ
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Tạo thư mục chứa ảnh và cấp quyền luôn cho nó
+    RUN mkdir -p /var/www/html/public/uploads/products
+    RUN chown -R www-data:www-data /var/www/html/public/uploads
 EXPOSE 80
