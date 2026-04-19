@@ -2,21 +2,36 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        \App\Models\User::create([
-        'name' => 'Admin Kho',
-        'email' => 'admin@gmail.com',
-        'password' => bcrypt('123'), // Mật khẩu là 123
-        'role' => 'admin',
-    ]);
+        User::create([
+            'name' => 'Admin Quản Trị',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('123'),
+            'role' => 'admin',
+            'is_locked' => false,
+        ]);
+
+        User::create([
+            'name' => 'Thành Thủ Kho',
+            'email' => 'manager@gmail.com',
+            'password' => Hash::make('123456789'),
+            'role' => 'manager',
+            'is_locked' => false,
+        ]);
+
+        User::create([
+            'name' => 'Tài Xế Giao Hàng',
+            'email' => 'driver@gmail.com',
+            'password' => Hash::make('123456789'),
+            'role' => 'driver',
+            'is_locked' => false,
+        ]);
     }
 }

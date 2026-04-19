@@ -16,8 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            UserSeeder::class,
-            CategorySeeder::class,
+            UserSeeder::class,      // Phải có user trước
+            CategorySeeder::class,  // Phải có danh mục trước
+            ProductSeeder::class,   // Có danh mục mới tạo được sản phẩm
+            ReceiptSeeder::class,   // Có user và sản phẩm mới tạo Phiếu Nhập
+            IssueSeeder::class,     // Tương tự cho Phiếu Xuất
         ]);
     }
+
 }

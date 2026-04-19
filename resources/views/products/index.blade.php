@@ -1,8 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Quản lý Hàng hóa') }}
-        </h2>
+        <div class="text-left flex flex-col justify-start">
+            <h2 class="font-bold text-xl text-indigo-600 leading-tight flex items-center m-0">
+                <span class="text-2xl mr-2">🏷️</span> 
+                 HÀNG HÓA
+            </h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium ml-9">Xem danh sách, thêm, sửa, xóa các mặt hàng đang có trong kho</p>
+        </div>
     </x-slot>
 
     <div class="py-12">

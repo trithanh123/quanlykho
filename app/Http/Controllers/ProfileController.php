@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,18 +25,40 @@ class ProfileController extends Controller
      * Update the user's profile information.
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        $request->user()->fill($request->validated());
+{
+    $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    // 1. Lấy toàn bộ dữ liệu từ form
+    $data = $request->validated();
+
+    // 2. XỬ LÝ UPLOAD HÌNH ẢNH (NẾU CÓ)
+    if ($request->hasFile('profile_picture')) {
+        $file = $request->file('profile_picture');
+
+        // a. Xóa hình ảnh cũ (nếu có) để đỡ tốn dung lượng
+        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+            Storage::disk('public')->delete($user->profile_picture);
         }
 
-        $request->user()->save();
+        // b. Lưu hình ảnh mới vào thư mục 'storage/app/public/profile-pictures'
+        $path = $file->store('profile-pictures', 'public');
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // c. Cập nhật đường dẫn vào mảng dữ liệu để lưu vào DB
+        $data['profile_picture'] = $path;
     }
 
+    // 3. Lưu toàn bộ dữ liệu vào Database
+    $user->fill($data);
+
+    // 4. Reset xác thực Email nếu Email bị thay đổi
+    if ($user->isDirty('email')) {
+        $user->email_verified_at = null;
+    }
+
+    $user->save();
+
+    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+}
     /**
      * Delete the user's account.
      */
@@ -57,4 +79,5 @@ class ProfileController extends Controller
 
         return Redirect::to('/');
     }
+    
 }

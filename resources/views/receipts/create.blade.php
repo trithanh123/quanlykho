@@ -1,8 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Lập Phiếu Nhập Kho') }}
-        </h2>
+        <div class="text-left flex flex-col justify-start">
+            <h2 class="font-bold text-xl text-blue-600 leading-tight flex items-center m-0">
+                <span class="text-2xl mr-2">📥</span> 
+                LẬP PHIẾU NHẬP KHO
+            </h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium ml-9">Ghi nhận thông tin linh kiện, sản phẩm mới nhập vào hệ thống</p>
+        </div>
     </x-slot>
 
     <div class="py-12">

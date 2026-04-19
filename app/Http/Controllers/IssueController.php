@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class IssueController extends Controller
 {
+    
     // Hiển thị danh sách phiếu xuất
     public function index()
     {
@@ -85,10 +86,30 @@ class IssueController extends Controller
     }
 
     // Xem chi tiết một phiếu xuất
-    public function show($id)
-    {
-        // Lấy phiếu xuất cùng với chi tiết và thông tin sản phẩm
-        $issue = Issue::with(['user', 'details.product'])->findOrFail($id);
-        return view('issues.show', compact('issue'));
-    }
+public function show($id)
+{
+    //xuất phiếu
+    $issue = Issue::with(['user', 'details.product'])->findOrFail($id);
+    // danh sách tài xế về sau này sẽ dùng để hiển thị dropdown chọn tài xế khi gán phiếu xuất
+    $drivers = \App\Models\User::where('role', 'driver')->get();
+    return view('issues.show', compact('issue', 'drivers'));
+}
+public function assignDriver(Request $request, $id)
+{
+    $request->validate([
+        'tai_xe_id' => 'required|exists:users,id'
+    ]);
+
+    $issue = Issue::findOrFail($id);
+    
+    // Cập nhật ID tài xế vào phiếu xuất
+    $issue->tai_xe_id = $request->tai_xe_id;
+    
+    // Tùy chọn: Đổi trạng thái phiếu (ví dụ thêm cột status='dang_giao')
+    // $issue->status = 'dang_giao'; 
+    
+    $issue->save();
+
+    return redirect()->back()->with('success', 'Đã gán phiếu xuất kho cho tài xế thành công!');
+}   
 }

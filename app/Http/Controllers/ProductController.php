@@ -86,6 +86,7 @@ class ProductController extends Controller
             'category_id' => 'required',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Bổ sung kiểm tra file ảnh
         ]);
 
         $product = \App\Models\Product::findOrFail($id);
@@ -97,8 +98,25 @@ class ProductController extends Controller
         $product->unit = $request->unit;
         $product->description = $request->description;
 
-        // Chỗ này nếu có làm upload file ảnh thì ông xử lý thêm nha, không thì tạm thời để vậy
-        // if ($request->hasFile('image')) { ... }
+        // XỬ LÝ UPLOAD ẢNH MỚI
+        if ($request->hasFile('image')) {
+            // Tùy chọn xịn: Xóa ảnh cũ đi cho nhẹ ổ cứng trước khi lưu ảnh mới
+            if ($product->image && file_exists(public_path($product->image))) {
+                unlink(public_path($product->image));
+            }
+
+            // Nhận file ảnh mới
+            $file = $request->file('image');
+            
+            // Tạo tên mới không trùng
+            $filename = time() . '_' . $file->getClientOriginalName();
+            
+            // Lưu vào thư mục uploads/products giống hệt lúc thêm mới
+            $file->move(public_path('uploads/products'), $filename);
+            
+            // Ghi đường dẫn mới vào CSDL
+            $product->image = 'uploads/products/' . $filename;
+        }
         
         $product->save();
 

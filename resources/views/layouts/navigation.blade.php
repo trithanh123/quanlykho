@@ -18,34 +18,45 @@
                         <x-nav-link :href="url('admin/users')" :active="request()->is('admin/users*')">
                             {{ __('Quản lý nhân viên') }}
                         </x-nav-link>
+                        
+                        <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                            {{ __('Quản Lý kho và Nhóm hàng') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('admin.transactions.index')" :active="false" class="text-indigo-600 font-bold border-indigo-300">
+                            {{ __('Quản Lý Phiếu Xuất/Nhập') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.index')">
+                             {{ __('Quản Lý Báo Cáo') }}
+                        </x-nav-link>
                     @endif
-    @if(auth()->user()->role == 'admin' || auth()->user()->role == 'manager')
-    <x-nav-link :href="route('receipts.create')" :active="request()->routeIs('receipts.*')">
-        @if(auth()->user()->role == 'admin')
-            {{ __('Quản lý nhập kho') }}
-        @else
-            {{ __('Phiếu nhập kho') }}
-        @endif
-    </x-nav-link>
-@endif
-            <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
-    @if(auth()->user()->role == 'admin')
-        {{ __('Quản lý hàng hóa') }}
-    @elseif(auth()->user()->role == 'manager') 
-        {{ __('Thêm hàng hóa') }}
-    @elseif(        auth()->user()->role == 'driver')
-        {{ __('Xem hàng hóa') }} {{-- Dành cho tài xế hoặc role khác nếu có --}}
-    @endif
-</x-nav-link>
-<x-nav-link :href="route('issues.index')" :active="request()->routeIs('issues.*')">
-    @if(auth()->user()->role == 'admin')
-        {{ __('Quản lý phiếu xuất') }}
-    @elseif(auth()->user()->role == 'manager')
-        {{ __('Lập phiếu xuất') }}
-    @elseif(auth()->user()->role == 'driver')
-        {{ __('Xem phiếu xuất') }}
-    @endif
-</x-nav-link>
+
+                    @if(auth()->user()->role == 'manager')
+                        <x-nav-link :href="route('receipts.create')" :active="request()->routeIs('receipts.*')">
+                            {{ __('Phiếu nhập kho') }}
+                        </x-nav-link>
+                    
+                        <x-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                            {{ __(' hàng hóa') }}
+                        </x-nav-link>
+                    
+                        <x-nav-link :href="route('issues.index')" :active="request()->routeIs('issues.*')">
+                            {{ __('Lập phiếu xuất') }}
+                        </x-nav-link>
+
+                        <x-nav-link :href="route('manager.inventory.index')" :active="request()->routeIs('manager.inventory.*')">
+                             {{ __('Kiểm soát tồn kho') }}
+                        </x-nav-link>
+                    @endif
+                    
+                    @if(auth()->user()->role == 'driver')
+                        <x-nav-link :href="route('driver.assignments')" :active="request()->routeIs('driver.assignments')">
+                            🚚 {{ __('Chuyến xe cần giao') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('driver.history')" :active="request()->routeIs('driver.history')">
+                            📜 {{ __('Lịch sử giao hàng') }}
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -53,8 +64,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
+                            <div>{{ Auth::user()->name }} ({{ ucfirst(Auth::user()->role) }})</div>
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -65,16 +75,12 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            {{ __('Thông Tin Cá Nhân') }}
                         </x-dropdown-link>
-
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                {{ __('Đăng Xuất') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -102,13 +108,44 @@
                 <x-responsive-nav-link :href="url('admin/users')" :active="request()->is('admin/users*')">
                     {{ __('Quản lý nhân viên') }}
                 </x-responsive-nav-link>
+                
+                <x-responsive-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
+                    {{ __('Quản Lý kho và Nhóm hàng') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.transactions.index')" :active="false" class="text-indigo-600 font-bold border-indigo-300">
+                    {{ __('Quản Lý Phiếu Xuất/Nhập') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.reports.index')" :active="request()->routeIs('admin.reports.index')">
+                     {{ __('Quản Lý Báo Cáo') }}
+                </x-responsive-nav-link>
             @endif
-         <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
-            {{ __('Quản lý hàng hóa') }}
-        </x-responsive-nav-link>
-           <x-responsive-nav-link :href="route('receipts.create')" :active="request()->routeIs('receipts.*')">
-            {{ __('Lập phiếu nhập kho') }}
-        </x-responsive-nav-link>
+            
+            @if(auth()->user()->role == 'manager')
+                <x-responsive-nav-link :href="route('receipts.create')" :active="request()->routeIs('receipts.*')">
+                    {{ __('Phiếu nhập kho') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
+                    {{ __(' hàng hóa') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('issues.index')" :active="request()->routeIs('issues.*')">
+                    {{ __('Lập phiếu xuất') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('manager.inventory.index')" :active="request()->routeIs('manager.inventory.*')">
+                     {{ __('Kiểm soát tồn kho') }}
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->user()->role == 'driver')
+                <x-responsive-nav-link :href="route('driver.assignments')" :active="request()->routeIs('driver.assignments')">
+                     🚚 {{ __('Chuyến xe cần giao') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('driver.history')" :active="request()->routeIs('driver.history')">
+                     📜 {{ __('Lịch sử giao hàng') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
@@ -119,19 +156,16 @@
 
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
+                    {{ __('Thông Tin Cá Nhân') }}
                 </x-responsive-nav-link>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
+                    <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                        {{ __('Đăng Xuất') }}
                     </x-responsive-nav-link>
                 </form>
             </div>
         </div>
     </div>
-</nav>
+</nav>  

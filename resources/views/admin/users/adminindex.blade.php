@@ -1,9 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Quản lý Tài Khoản Nhân Viên') }}
+    <div class="text-left flex flex-col justify-start">
+        {{-- Đổi text-gray-800 sang text-red-600 để có màu đỏ --}}
+        <h2 class="font-bold text-xl text-red-600 leading-tight flex items-center m-0">
+            <span class="text-2xl mr-2">👥</span> 
+            QUẢN LÝ TÀI KHOẢN NHÂN VIÊN
         </h2>
-    </x-slot>
+        <p class="text-sm text-gray-500 mt-1 font-medium ml-9">Quản lý danh sách, cấp quyền và trạng thái hoạt động của nhân viên</p>
+    </div>
+</x-slot>
 
    <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
