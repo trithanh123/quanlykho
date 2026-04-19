@@ -20,7 +20,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
 
 # 5. CÀI ĐẶT VÀ BUILD CSS/JS (TAILWIND, VITE)
-# Bước này sẽ tạo ra thư mục public/build chứa giao diện đã đóng gói
 RUN npm install
 RUN npm run build
 
@@ -36,4 +35,12 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN mkdir -p /var/www/html/public/uploads/products
 RUN chown -R www-data:www-data /var/www/html/public/uploads
 
+# 9. TỰ ĐỘNG CHẠY MIGRATION KHI KHỞI ĐỘNG (PHẦN MỚI THÊM)
+# Script này sẽ chạy lệnh migrate trước, sau đó mới bật server Apache
+RUN echo '#!/bin/sh\nphp artisan migrate --force\napache2-foreground' > /usr/local/bin/start-app.sh \
+    && chmod +x /usr/local/bin/start-app.sh
+
 EXPOSE 80
+
+# Sử dụng script khởi động thay vì lệnh mặc định
+CMD ["/usr/local/bin/start-app.sh"]
