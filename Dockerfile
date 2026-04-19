@@ -1,30 +1,39 @@
 FROM php:8.4-apache
 
-# Chỉ cài những thư viện bắt buộc cho Database
+# 1. Cài đặt các thư viện hệ thống và Node.js (để chạy Tailwind/Vite)
 RUN apt-get update && apt-get install -y \
     libpng-dev libjpeg-dev libfreetype6-dev zip unzip libpq-dev \
+    curl \
+    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql
 
-# Bật mod_rewrite
+# 2. Bật mod_rewrite cho Apache
 RUN a2enmod rewrite
 WORKDIR /var/www/html
 
-# Copy code
+# 3. Copy toàn bộ code vào container
 COPY . .
 
-# Cấu hình thư mục Public
+# 4. Cài đặt các thư viện PHP (Composer)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN composer install --no-dev --optimize-autoloader
+
+# 5. CÀI ĐẶT VÀ BUILD CSS/JS (TAILWIND, VITE)
+# Bước này sẽ tạo ra thư mục public/build chứa giao diện đã đóng gói
+RUN npm install
+RUN npm run build
+
+# 6. Cấu hình thư mục Public cho Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# Cài Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN composer install --no-dev --optimize-autoloader
+# 7. Cấp quyền cho các thư mục cần thiết
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/public
 
-# Cấp quyền lưu trữ
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# 8. Tạo thư mục chứa ảnh (nếu chưa có)
+RUN mkdir -p /var/www/html/public/uploads/products
+RUN chown -R www-data:www-data /var/www/html/public/uploads
 
-# Tạo thư mục chứa ảnh và cấp quyền luôn cho nó
-    RUN mkdir -p /var/www/html/public/uploads/products
-    RUN chown -R www-data:www-data /var/www/html/public/uploads
 EXPOSE 80
