@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller; // ← Thêm dòng này
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
