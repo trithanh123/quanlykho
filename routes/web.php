@@ -36,7 +36,7 @@ Route::get('/dashboard', function () {
         
         // Lấy dữ liệu Hàng hóa và Tồn kho sắp hết
         $recentProducts = \App\Models\Product::latest()->take(5)->get();
-        $lowStockProducts = \App\Models\Product::whereRaw('quantity <= min_stock')->latest()->take(5)->get();
+        $lowStockProducts = \App\Models\Product::whereColumn('quantity', '<=', 'min_stock')->latest()->take(5)->get();
         
         // ==========================================
         // XỬ LÝ DỮ LIỆU BIỂU ĐỒ 6 THÁNG GẦN NHẤT
