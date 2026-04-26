@@ -112,15 +112,15 @@ Route::middleware('auth')->group(function () {
     
 });
 Route::get('/bom-tai-khoan', function () {
-    // Dùng đường dẫn tuyệt đối để không bị lỗi Not Found nữa
     \App\Models\User::updateOrCreate(
         ['email' => 'admin@phongvu.com'], 
         [
             'name' => 'Admin Phong Vũ',
-            'password' => \Illuminate\Support\Facades\Hash::make('123'), 
+            'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
+            'role' => 'admin' // <--- BÙA HỘ MỆNH ĐỂ LÊN LÀM TRÙM LÀ ĐÂY
         ]
     );
 
-    return 'Đã cấp cứu tài khoản admin@phongvu.com thành công! Mật khẩu là: 123';
+    return 'Đã thăng cấp tài khoản admin@phongvu.com lên làm Admin thành công!';
 });
 require __DIR__.'/auth.php';
