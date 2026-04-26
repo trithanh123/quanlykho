@@ -3,12 +3,20 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo Warehouse" class="block h-9 w-auto">
-                        <span class="font-bold text-xl text-indigo-600 tracking-wider">Warehouse</span>
-                    </a>
-                </div>
+    <a href="{{ route('dashboard') }}" class="flex items-center">
+        <div class="flex items-center gap-2">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo Warehouse" class="block h-9 w-auto">
+            <span class="font-bold text-xl text-indigo-600 tracking-wider">Warehouse</span>
+        </div>
 
+        <span class="mx-4 text-gray-300 text-2xl font-extralight transform rotate-12">/</span>
+
+        <div class="flex items-center gap-2">
+            <img src="{{ asset('images/phongvu.png') }}" alt="Phong Vũ PC" class="block h-7 w-auto rounded shadow-sm">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-tighter">Phong Vũ PC</span>
+        </div>
+    </a>
+</div>
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         Trang chủ

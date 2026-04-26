@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Model;
 
 class Receipt extends Model
@@ -15,8 +15,11 @@ class Receipt extends Model
     }
 
     // Thiết lập mối quan hệ: 1 phiếu nhập có nhiều chi tiết hàng hóa
-    public function details()
+   public function details() {
+    return $this->hasMany(ReceiptDetail::class, 'receipt_id');
+}
+    public function warehouse()
     {
-        return $this->hasMany(ReceiptDetail::class);
+        return $this->belongsTo(Warehouse::class, 'warehouse_id');
     }
 }

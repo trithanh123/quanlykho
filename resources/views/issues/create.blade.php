@@ -28,7 +28,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('issues.store') }}" method="POST">
+                    <form action="{{ route('issues.store') }}" method="POST" novalidate>
                         @csrf
                         
                         <div class="mb-6">

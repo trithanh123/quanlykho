@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller; // ← Thêm dòng này
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\StoreReceiptRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use App\Models\Receipt;            
@@ -23,7 +23,7 @@ class ReceiptController extends Controller
         return view('receipts.create', compact('recentReceipts', 'products'));
     }
 
-    public function store(Request $request)
+    public function store(StoreReceiptRequest $request )
     {
         // 1. Kiểm tra dữ liệu (Validation)
         $request->validate([
@@ -76,9 +76,17 @@ class ReceiptController extends Controller
 
     public function show($id)
     {
-        // Lấy phiếu nhập kèm thông tin user và chi tiết sản phẩm
-        $receipt = Receipt::with(['user', 'details.product'])->findOrFail($id);
+        // Tìm phiếu nhập theo ID, lấy kèm thông tin người tạo và chi tiết sản phẩm
+        $receipt = \App\Models\Receipt::with('user', 'details.product')->findOrFail($id);
         
         return view('receipts.show', compact('receipt'));
+    }
+    public function index()
+    {
+        // Lấy danh sách phiếu nhập kho, sắp xếp mới nhất lên đầu
+        $receipts = \App\Models\Receipt::with('user', 'warehouse')->latest()->get();
+
+        // Trả về file giao diện hiển thị danh sách
+        return view('receipts.index', compact('receipts'));
     }
 }

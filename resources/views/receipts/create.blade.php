@@ -14,13 +14,13 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-8 text-gray-900">
                     
-                    <form action="{{ route('receipts.store') }}" method="POST">
+                    <form action="{{ route('receipts.store') }}" method="POST" novalidate>
                     @csrf
                         
                         {{-- THÊM CỤC BẮT LỖI NÀY VÀO ĐÂY --}}
                         @if ($errors->any())
                             <div class="p-4 mb-6 text-sm text-red-800 rounded-lg bg-red-100 border border-red-200" role="alert">
-                                <span class="font-bold">Khoan đã ông ơi, kiểm tra lại thông tin nè:</span>
+                                <span class="font-bold">hãy kiểm tra lại thông tin nè:</span>
                                 <ul class="mt-1 list-disc list-inside">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>

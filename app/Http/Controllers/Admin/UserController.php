@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
-
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 class UserController extends Controller
 {
     /**
@@ -46,36 +46,17 @@ class UserController extends Controller
         
         return back()->with('success', $message);
     }
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        // 1. Kiểm tra dữ liệu đầu vào (Validation)
-        // Nếu nhập thiếu hoặc sai, Laravel sẽ tự động đá ngược lại form
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-            'role' => 'required|in:admin,manager,driver',
-        ], [
-            // Tùy chỉnh câu thông báo lỗi cho thân thiện
-            'name.required' => 'Vui lòng nhập tên nhân viên.',
-            'email.required' => 'Vui lòng nhập email.',
-            'email.unique' => 'Email này đã tồn tại trong hệ thống.',
-            'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
-        ]);
+        // 1. Dữ liệu đã được FormRequest lọc sạch sẽ và an toàn
+        $data = $request->validated();
+        
+        // 2. Băm mật khẩu
+        $data['password'] = bcrypt($data['password']);
 
-        // 2. Lưu thông tin vào database
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password), // Lệnh bcrypt giúp băm nhỏ mật khẩu để bảo mật
-            'role' => $request->role,
-        ]);
+        // 3. Lưu vào Database cực nhanh với lệnh create
+        User::create($data);
 
-        // 3. Chuyển hướng về trang danh sách và gửi kèm một dòng thông báo
         return redirect('admin/users')->with('success', 'Đã thêm nhân viên mới thành công!');
     }
 
@@ -102,33 +83,23 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
-        // 1. Tìm nhân viên đang cần sửa
         $user = User::findOrFail($id);
+        
+        // 1. Lấy dữ liệu an toàn
+        $data = $request->validated();
 
-        // 2. Kiểm tra dữ liệu nhập vào
-        $request->validate([
-            'name' => 'required|string|max:255',
-            // Lệnh unique có thêm biến $id để bỏ qua email của chính nhân viên này (nếu họ không đổi email)
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'role' => 'required|in:admin,manager,driver',
-            'password' => 'nullable|string|min:8', // Nullable: Không bắt buộc nhập (cho phép để trống)
-        ]);
-
-        // 3. Cập nhật các thông tin cơ bản
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-
-        // 4. Nếu người quản lý CÓ gõ mật khẩu mới thì mới mã hóa và lưu đè lên pass cũ
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
+        // 2. Xử lý mật khẩu (Nếu có nhập pass mới thì băm, không thì bỏ qua để giữ pass cũ)
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']); 
         }
 
-        $user->save();
+        // 3. Lưu đè thông tin mới
+        $user->update($data);
 
-        // 5. Đá văng ra ngoài danh sách và báo màu xanh
         return redirect('admin/users')->with('success', 'Đã cập nhật thông tin nhân viên thành công!');
     }
 

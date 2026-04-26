@@ -8,7 +8,7 @@ use App\Models\IssueDetail;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Requests\StoreIssueRequest;
 class IssueController extends Controller
 {
     
@@ -29,57 +29,45 @@ class IssueController extends Controller
     }
 
     // Xử lý lưu phiếu xuất và trừ tồn kho
-    public function store(Request $request)
+    public function store(StoreIssueRequest $request)
     {
-        // 1. Validate dữ liệu gửi lên từ form
-        $request->validate([
-            'note' => 'nullable|string',
-            'products' => 'required|array', // Mảng các sản phẩm được chọn
-            'products.*.id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1',
-        ]);
+        // 1. Dữ liệu ĐÃ ĐƯỢC KIỂM TRA tự động bằng StoreIssueRequest, gọi ra xài luôn
+        $data = $request->validated();
 
         try {
-            // 2. Bắt đầu Transaction
             DB::beginTransaction();
 
-            // 3. Tạo phiếu xuất (Issue)
+            // 2. Tạo phiếu xuất (Issue)
             $issue = Issue::create([
-                'issue_code' => '#IS-' . strtoupper(uniqid()), // Tạo mã ngẫu nhiên, VD: #IS-64B1A2C
-                'user_id' => Auth::id(), // Lấy ID của người (Thủ kho) đang đăng nhập
+                'issue_code' => '#IS-' . strtoupper(uniqid()), 
+                'user_id' => Auth::id(), 
                 'issue_date' => now(),
-                'note' => $request->note,
+                'note' => $data['note'] ?? null, // Dùng $data thay vì $request
             ]);
 
-            // 4. Lưu chi tiết phiếu xuất và Cập nhật tồn kho
-            foreach ($request->products as $item) {
+            // 3. Lưu chi tiết phiếu xuất và Cập nhật tồn kho
+            foreach ($data['products'] as $item) { // Dùng $data thay vì $request
                 $product = Product::findOrFail($item['id']);
 
                 // Kiểm tra xem số lượng xuất có vượt quá tồn kho không
                 if ($item['quantity'] > $product->quantity) {
-                    // Ném lỗi để rollback lại toàn bộ
-                    throw new \Exception("Số lượng xuất của sản phẩm {$product->name} vượt quá số lượng tồn!");
+                    throw new \Exception("Số lượng xuất của sản phẩm {$product->name} vượt quá số lượng tồn ({$product->quantity})!");
                 }
 
-                // Lưu vào bảng issue_details
                 IssueDetail::create([
                     'issue_id' => $issue->id,
                     'product_id' => $product->id,
                     'quantity' => $item['quantity'],
-                    'price' => $product->price, // Tùy chọn: Lưu lại giá tại thời điểm xuất
+                    'price' => $product->price, 
                 ]);
 
-                // Trừ số lượng tồn trong bảng products
                 $product->decrement('quantity', $item['quantity']);
             }
 
-            // 5. Nếu mọi thứ thành công, Commit lưu vào Database
             DB::commit();
-
             return redirect()->route('issues.index')->with('success', 'Lập phiếu xuất kho thành công!');
 
         } catch (\Exception $e) {
-            // 6. Nếu có bất kỳ lỗi nào xảy ra (VD: xuất lố tồn kho), Rollback toàn bộ
             DB::rollBack();
             return back()->with('error', 'Lỗi: ' . $e->getMessage())->withInput();
         }

@@ -36,7 +36,7 @@ Route::get('/dashboard', function () {
         
         // Lấy dữ liệu Hàng hóa và Tồn kho sắp hết
         $recentProducts = \App\Models\Product::latest()->take(5)->get();
-        $lowStockProducts = \App\Models\Product::whereColumn('quantity', '<=', 'min_stock')->latest()->take(5)->get();
+        $lowStockProducts = \App\Models\Product::whereRaw('quantity <= min_stock')->latest()->take(5)->get();
         
         // ==========================================
         // XỬ LÝ DỮ LIỆU BIỂU ĐỒ 6 THÁNG GẦN NHẤT
@@ -75,7 +75,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // --- KHU VỰC ADMIN ---
-    Route::resource('admin/users', UserController::class);
+    // ✅ SỬA Ở ĐÂY: Thêm ->names('admin.users') để tự động định danh route đúng chuẩn
+    Route::resource('admin/users', UserController::class)->names('admin.users');
     Route::put('admin/users/{id}/lock', [UserController::class, 'toggleLock']);
     
     Route::get('admin/transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('admin.transactions.index');
@@ -83,6 +84,8 @@ Route::middleware('auth')->group(function () {
     Route::delete('admin/transactions/issue/{id}', [\App\Http\Controllers\Admin\TransactionController::class, 'destroyIssue'])->name('admin.transactions.destroyIssue');
     Route::put('admin/transactions/receipt/{id}/unlock', [\App\Http\Controllers\Admin\TransactionController::class, 'unlockReceipt'])->name('admin.transactions.unlockReceipt');
     Route::put('admin/transactions/issue/{id}/unlock', [\App\Http\Controllers\Admin\TransactionController::class, 'unlockIssue'])->name('admin.transactions.unlockIssue');
+    
+    // ✅ SỬA Ở ĐÂY: Đổi name thành 'reports.index' để khớp với code trong dashboard.blade.php
     Route::get('admin/reports', [\App\Http\Controllers\Admin\ReportController::class, 'index'])->name('admin.reports.index');
 
     // --- KHU VỰC QUẢN LÝ CHUNG ---

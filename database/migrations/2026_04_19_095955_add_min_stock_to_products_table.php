@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             // XÂY THÊM CỘT: Nằm ngay dưới cột 'quantity' cho dễ nhìn
-          $table->integer('min_stock')->default(10);
+            $table->integer('min_stock')->default(10)->after('quantity');
         });
     }
 
