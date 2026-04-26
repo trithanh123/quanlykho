@@ -28,7 +28,7 @@ class ProfileUpdateRequest extends FormRequest
             // 2. KIỂM TRA CHUỖI SỐ (Regex Format Check)
             'phone' => ['nullable', 'string', 'regex:/^[0-9]{10}$/'],
             'id_card' => ['nullable', 'string', 'regex:/^[0-9]{12}$/', Rule::unique('users')->ignore($userId)],
-
+   
             // 3. KIỂM TRA NGÀY THÁNG & 4. KIỂM TRA TUỔI (Date, Min Age)
             'dob' => ['nullable', 'date', 'before:-18 years'], // Phải đủ 18 tuổi
             'id_issue_date' => ['nullable', 'date', 'before_or_equal:today'], // Không cấp CCCD ở tương lai
@@ -41,7 +41,11 @@ class ProfileUpdateRequest extends FormRequest
             
             // KIỂM TRA HÌNH ẢNH (Avatar)
             'profile_picture' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'], // Tối đa 5MB
-        ];
+        // THÔNG TIN CÔNG VIỆC (THÊM VÀO ĐÂY)
+        'position' => ['nullable', 'string', 'max:255'],
+        'join_date' => ['nullable', 'date'],
+        'skills' => ['nullable', 'string'],
+            ];
     }
 
     public function messages(): array
