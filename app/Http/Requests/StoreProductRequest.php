@@ -23,7 +23,7 @@ class StoreProductRequest extends FormRequest
             
             // 2. KIỂM TRA SỐ NGUYÊN (Integer), BẮT BUỘC >= 0
             'quantity' => ['required', 'integer', 'min:0'],
-            'min_stock' => ['required', 'integer', 'min:0'],
+            'min_stock' => ['nullable', 'integer', 'min:0'],
             
             'unit' => ['required', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg', 'max:2048'],
