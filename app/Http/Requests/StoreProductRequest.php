@@ -26,7 +26,7 @@ class StoreProductRequest extends FormRequest
             'min_stock' => ['nullable', 'integer', 'min:0'],
             
             'unit' => ['required', 'string', 'max:50'],
-            'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,jfif,gif', 'max:5120'],
         ];
     }
 
@@ -48,6 +48,8 @@ class StoreProductRequest extends FormRequest
             'sku.required' => 'Mã SKU không được để trống!',
             'sku.unique'   => '❌ Mã Sản Phẩm này đã tồn tại trong hệ thống rồi !',
             'image.image' => 'File tải lên phải là định dạng hình ảnh.',
+            'image.mimes' => '❌ Hình ảnh phải là định dạng jpg, jpeg, png, webp hoặc jfif !',
+            'image.max' => '❌ File ảnh nặng quá 5MB rồi,  nén lại bớt để giảm!',
         ];
     }
 }
