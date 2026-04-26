@@ -21,9 +21,9 @@ class StoreProductRequest extends FormRequest
             // 1. KIỂM TRA SỐ THẬP PHÂN (Decimal), BẮT BUỘC >= 0
             'price' => ['required', 'numeric', 'min:0'], 
             
-            // 2. KIỂM TRA SỐ NGUYÊN (Integer), BẮT BUỘC >= 1
-            'quantity' => ['required', 'integer', 'min:1'],
-            'min_stock' => ['required', 'integer', 'min:1'],
+            // 2. KIỂM TRA SỐ NGUYÊN (Integer), BẮT BUỘC >= 0
+            'quantity' => ['required', 'integer', 'min:0'],
+            'min_stock' => ['required', 'integer', 'min:0'],
             
             'unit' => ['required', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'mimes:jpg,png,jpeg', 'max:2048'],
@@ -42,9 +42,9 @@ class StoreProductRequest extends FormRequest
             'price.numeric' => 'Giá sản phẩm phải là một con số.',
             'price.min' => 'Giá sản phẩm không được nhỏ hơn 0.',
             'quantity.integer' => 'Số lượng tồn kho phải là số nguyên (không chứa dấu phẩy).',
-            'quantity.min' => 'Số lượng tồn kho không được nhỏ hơn 1.',
+            'quantity.min' => 'Số lượng tồn kho không được nhỏ hơn 0.',
             'min_stock.integer' => 'Mức tồn kho tối thiểu phải là số nguyên.',
-            'min_stock.min' => 'Mức tồn kho tối thiểu không được nhỏ hơn 1.',
+            'min_stock.min' => 'Mức tồn kho tối thiểu không được nhỏ hơn 0.',
             
             'image.image' => 'File tải lên phải là định dạng hình ảnh.',
         ];

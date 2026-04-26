@@ -29,11 +29,11 @@ class ProductController extends Controller
             'sku' => 'required|string|unique:products,sku',
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ], [
             'price.min' => 'Giá bán không được nhỏ hơn 0.', // Tui gộp báo lỗi của ông lên đây cho gọn
-            'quantity.min' => 'Số lượng không được nhỏ hơn 1.',
+            'quantity.min' => 'Số lượng không được nhỏ hơn 0.',
         ]);
 
         // 2. Xử lý file ảnh ĐẨY LÊN CLOUDINARY
