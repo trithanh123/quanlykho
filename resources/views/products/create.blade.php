@@ -46,8 +46,10 @@
 
         <div>
             <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900">Số lượng <span class="text-red-500">*</span></label>
-            <input type="number" name="quantity" id="quantity" min="0" oninput="checkQuantity(this)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required value="0">
-            
+            <input type="number" name="quantity" id="quantity" min="1" oninput="checkQuantity(this)" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required value="1">
+            @error('quantity')
+    <div class="text-red-500" style="color: red;">{{ $message }}</div>
+@enderror
             
             <p id="quantity-error" class="mt-2 text-sm text-red-600 hidden font-medium">❌ Số lượng không được nhỏ hơn 0!</p>
         </div>
