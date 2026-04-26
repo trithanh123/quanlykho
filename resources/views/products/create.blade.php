@@ -32,10 +32,12 @@
                             <div>
                                 <label for="sku" class="block mb-2 text-sm font-medium text-gray-900">Mã SKU <span class="text-red-500">*</span></label>
                                 <input type="text" name="sku" id="sku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required placeholder="VD: NK-001">
-                             {{-- Hiển thị thông báo lỗi nếu trùng SKU --}}
-                            @error('sku')
-                                <span class="text-red-500 text-sm">{{ $message }}</span>
-                            @enderror                          
+                             {{-- Hiển thị thông báo lỗi trùng SKU kiểu "cháy phố" --}}
+    @error('sku')
+        <p class="mt-2 text-sm text-red-600 font-medium">
+            {{ $message }}
+        </p>
+    @enderror                        
                             </div>
 
                             <div>

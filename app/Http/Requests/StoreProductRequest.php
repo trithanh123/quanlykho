@@ -45,7 +45,8 @@ class StoreProductRequest extends FormRequest
             'quantity.min' => 'Số lượng tồn kho không được nhỏ hơn 0.',
             'min_stock.integer' => 'Mức tồn kho tối thiểu phải là số nguyên.',
             'min_stock.min' => 'Mức tồn kho tối thiểu không được nhỏ hơn 0.',
-            
+            'sku.required' => 'Mã SKU không được để trống!',
+            'sku.unique'   => '❌ Mã Sản Phẩm này đã tồn tại trong hệ thống rồi !',
             'image.image' => 'File tải lên phải là định dạng hình ảnh.',
         ];
     }
