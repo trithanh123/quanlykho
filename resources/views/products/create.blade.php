@@ -4,6 +4,17 @@
             {{ __('Nhập Hàng Hóa Mới') }}
         </h2>
     </x-slot>
+    {{-- GẮN TẠM ĐOẠN NÀY ĐỂ TÌM THỦ PHẠM --}}
+@if ($errors->any())
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <strong>Khoan đã ông ơi, đang bị vướng mấy lỗi này nè:</strong>
+        <ul class="list-disc list-inside mt-2">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
