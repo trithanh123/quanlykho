@@ -4,15 +4,6 @@
             {{ __('Nhập Hàng Hóa Mới') }}
         </h2>
     </x-slot>
-    @if ($errors->any())
-    <div style="background: #fee2e2; color: #dc2626; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -33,11 +24,11 @@
                                 <label for="sku" class="block mb-2 text-sm font-medium text-gray-900">Mã SKU <span class="text-red-500">*</span></label>
                                 <input type="text" name="sku" id="sku" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-indigo-500 focus:border-indigo-500 block w-full p-2.5" required placeholder="VD: NK-001">
                              {{-- Hiển thị thông báo lỗi trùng SKU kiểu "cháy phố" --}}
-    @error('sku')
-        <p class="mt-2 text-sm text-red-600 font-medium">
-            {{ $message }}
-        </p>
-    @enderror                        
+                            @error('sku')
+                            <p class="mt-2 text-sm text-red-600 font-medium">
+                            {{ $message }}
+                            </p>
+                             @enderror                        
                             </div>
 
                             <div>

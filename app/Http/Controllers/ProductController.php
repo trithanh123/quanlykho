@@ -21,7 +21,7 @@ class ProductController extends Controller
         return view('products.create', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(\App\Http\Requests\StoreProductRequest $request)
     {
         // 1. Kiểm tra dữ liệu
         $request->validate([
