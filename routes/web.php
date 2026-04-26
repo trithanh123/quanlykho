@@ -111,5 +111,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/manager/inventory/export', [\App\Http\Controllers\Manager\InventoryController::class, 'exportCsv'])->name('manager.inventory.export');
     
 });
-
+Route::get('/reset-db-ngay-va-luon', function () {
+    // Thêm --force vì Render đang ở môi trường Production
+    Artisan::call('migrate:fresh', ['--force' => true]); 
+    
+    return 'Đã đập đi xây lại Database thành công, trơn tru sạch sẽ rồi nha ông!';
+});
 require __DIR__.'/auth.php';
