@@ -33,18 +33,15 @@ class ProfileController extends Controller
 
     // 2. XỬ LÝ UPLOAD HÌNH ẢNH (NẾU CÓ)
     if ($request->hasFile('profile_picture')) {
-        $file = $request->file('profile_picture');
+        // Đẩy thẳng lên Cloudinary
+        $cloudinary = new \Cloudinary\Cloudinary(env('CLOUDINARY_URL'));
+        $uploadedImage = $cloudinary->uploadApi()->upload(
+            $request->file('profile_picture')->getRealPath(),
+            ['folder' => 'warehouse_profiles'] // Lưu vào folder riêng cho profile
+        );
 
-        // a. Xóa hình ảnh cũ (nếu có) để đỡ tốn dung lượng
-        if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-
-        // b. Lưu hình ảnh mới vào thư mục 'storage/app/public/profile-pictures'
-        $path = $file->store('profile-pictures', 'public');
-
-        // c. Cập nhật đường dẫn vào mảng dữ liệu để lưu vào DB
-        $data['profile_picture'] = $path;
+        // Lấy link ảnh Cloudinary gán vào DB
+        $data['profile_picture'] = $uploadedImage['secure_url'];
     }
 
     // 3. Lưu toàn bộ dữ liệu vào Database

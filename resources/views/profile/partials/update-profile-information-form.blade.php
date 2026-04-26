@@ -18,7 +18,7 @@
             
             <div class="relative w-36 h-36">
                 @if ($user->profile_picture)
-                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="{{ $user->name }}" class="w-full h-full rounded-full object-cover border-4 border-white dark:border-gray-900 shadow-xl">
+                    <img src="{{ $user->profile_picture }}" alt="{{ $user->name }}" class="w-full h-full rounded-full object-cover border-4 border-white dark:border-gray-900 shadow-xl">
                 @else
                     <div class="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center border-4 border-white dark:border-gray-900 shadow-xl">
                         <span class="text-5xl">👤</span>

@@ -40,7 +40,7 @@ class ProfileUpdateRequest extends FormRequest
             'emergency_contact' => ['nullable', 'string', 'max:255'],
             
             // KIỂM TRA HÌNH ẢNH (Avatar)
-            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'], // Tối đa 2MB
+            'profile_picture' => ['nullable', 'image', 'mimes:jpg,jpeg,png', 'max:5120'], // Tối đa 5MB
         ];
     }
 
@@ -58,7 +58,7 @@ class ProfileUpdateRequest extends FormRequest
             'dob.before' => 'Bạn phải đủ 18 tuổi.',
             'id_issue_date.before_or_equal' => 'Ngày cấp CCCD không thể là ngày trong tương lai.',
             'profile_picture.image' => 'File tải lên phải là hình ảnh.',
-            'profile_picture.max' => 'Kích thước ảnh không được vượt quá 2MB.',
+            'profile_picture.max' => 'Kích thước ảnh không được vượt quá 5MB.',
         ];
     }
 }   
