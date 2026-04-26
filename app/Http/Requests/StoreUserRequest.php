@@ -27,6 +27,7 @@ class StoreUserRequest extends FormRequest
            'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s]+$/u'],
         'email' => ['required', 'string', 'email', 'ends_with:@phongvu.com', 'max:255', 'unique:users,email'],
         'password' => 'required|min:8',
+        'role' => ['required', 'in:admin,manager,driver'],
         ];
     }
     public function messages(): array

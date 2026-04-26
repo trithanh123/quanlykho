@@ -111,16 +111,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/manager/inventory/export', [\App\Http\Controllers\Manager\InventoryController::class, 'exportCsv'])->name('manager.inventory.export');
     
 });
-Route::get('/bom-tai-khoan', function () {
-    \App\Models\User::updateOrCreate(
-        ['email' => 'admin@phongvu.com'], 
-        [
-            'name' => 'Admin Phong Vũ',
-            'password' => \Illuminate\Support\Facades\Hash::make('12345678'),
-            'role' => 'admin' // <--- BÙA HỘ MỆNH ĐỂ LÊN LÀM TRÙM LÀ ĐÂY
-        ]
-    );
-
-    return 'Đã thăng cấp tài khoản admin@phongvu.com lên làm Admin thành công!';
-});
 require __DIR__.'/auth.php';

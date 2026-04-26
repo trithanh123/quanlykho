@@ -18,10 +18,8 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ url('admin/users') }}">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">
-                
-                <form method="POST" action="{{ url('admin/users') }}">
+             <form method="POST" action="{{ url('admin/users') }}">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-8">            
                     @csrf <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">Tên nhân viên</label>
                         <input type="text" name="name" id="name" required
