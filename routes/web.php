@@ -112,19 +112,15 @@ Route::middleware('auth')->group(function () {
     
 });
 Route::get('/bom-tai-khoan', function () {
-    // 1. Nếu ông có file Seeder để tạo dữ liệu mẫu (Danh mục, User) thì bỏ comment dòng này:
-    // Artisan::call('db:seed', ['--force' => true]);
-
-    // 2. Tạo thủ công tài khoản Admin (Nếu không dùng Seeder)
-    User::updateOrCreate(
-        ['email' => 'admin@phongvu.com'], // Tài khoản
+    // Dùng đường dẫn tuyệt đối để không bị lỗi Not Found nữa
+    \App\Models\User::updateOrCreate(
+        ['email' => 'admin@phongvu.com'], 
         [
             'name' => 'Admin Phong Vũ',
-            'password' => Hash::make('123'), // Mật khẩu tạm là 12345678
-            // Thêm giá trị cho các cột bắt buộc khác nếu có (ví dụ: 'phone' => '0901234567')
+            'password' => \Illuminate\Support\Facades\Hash::make('123'), 
         ]
     );
 
-    return 'Đã cấp cứu tài khoản admin@phongvu.com thành công! Mật khẩu là: 12345678';
+    return 'Đã cấp cứu tài khoản admin@phongvu.com thành công! Mật khẩu là: 123';
 });
 require __DIR__.'/auth.php';
