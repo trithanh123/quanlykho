@@ -30,7 +30,7 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'price' => 'required|numeric|min:0',
             'quantity' => 'required|integer|min:1',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp,jfif|max:5120',
         ], [
             'price.min' => 'Giá bán không được nhỏ hơn 0.', // Tui gộp báo lỗi của ông lên đây cho gọn
             'quantity.min' => 'Số lượng không được nhỏ hơn 0.',
