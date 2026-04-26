@@ -40,7 +40,7 @@
                                     
                                     <td class="px-6 py-4 text-center">
                                         @if($product->image)
-                                            <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="h-10 w-10 object-cover rounded shadow-sm mx-auto">
+                                            <img src="{{ $product->image }}" alt="{{ $product->name }}" class="h-10 w-10 object-cover rounded shadow-sm mx-auto">
                                         @else
                                             <span class="inline-block h-8 w-8 rounded-full overflow-hidden bg-gray-100 mx-auto">
                                                 <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
