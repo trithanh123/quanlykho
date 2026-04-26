@@ -30,12 +30,14 @@ class StoreReceiptRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => ' chưa chọn sản phẩm nào để nhập kho hết!',
-            'product_id.*.exists' => 'Sản phẩm chọn không tồn tại.',
-            'quantity.*.integer' => 'Số lượng phải là số nguyên.',
-            'quantity.*.min' => 'Số lượng nhập phải lớn hơn 0.',
-            'price.*.numeric' => 'Giá nhập phải là con số.',
-            'price.*.min' => 'Giá nhập không được là số âm.',
+            'product_id.required' => '❌ Chưa chọn sản phẩm nào để nhập kho hết!',
+            'product_id.*.exists' => '❌ Sản phẩm chọn không tồn tại.',
+            'quantity.*.integer' => '❌ Số lượng phải là số nguyên.',
+            'quantity.*.min' => '❌ Số lượng nhập phải lớn hơn 0.',
+            'price.*.numeric' => '❌ Giá nhập phải là con số.',
+            'price.*.min' => '❌ Giá nhập không được là số âm.',
+            'price.*.required' => '❌ Giá nhập không được để trống!',
+            'price.*.numeric'  => '❌ Giá nhập phải là số nguyên cơ!',
         ];
     }
 }
