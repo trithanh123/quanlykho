@@ -60,7 +60,7 @@
                 
                 <h1 class="text-white text-4xl lg:text-5xl font-bold text-center px-10 drop-shadow-lg leading-tight uppercase tracking-wider">
                     Hệ Thống Quản Lý <br> 
-                    <span class="text-blue-300">Kho Linh Kiện</span>
+                    <span class="text-blue-300">Kho Linh Kiện Máy Tính</span>
                 </h1>
                 
                 <p class="text-blue-100 text-lg font-medium tracking-widest uppercase">
