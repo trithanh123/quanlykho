@@ -19,7 +19,9 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    // 1. Dành cho Tài xế
+    // ==========================================
+    // 1. DÀNH CHO TÀI XẾ
+    // ==========================================
     if ($user->role == 'driver') {
         $pendingDeliveries = \App\Models\Issue::where('tai_xe_id', $user->id)
             ->whereIn('status', ['dang_giao', 'tam_hoan'])->latest()->take(5)->get();
@@ -29,7 +31,9 @@ Route::get('/dashboard', function () {
         return view('dashboard', compact('pendingDeliveries', 'completedDeliveries'));
     } 
     
-    // 2. Dành cho Thủ kho (Manager) & Admin
+    // ==========================================
+    // 2. DÀNH CHO THỦ KHO (MANAGER) & ADMIN
+    // ==========================================
     else {
         $recentReceipts = \App\Models\Receipt::with('user')->latest()->take(5)->get();
         $recentIssues = \App\Models\Issue::with('user')->latest()->take(5)->get();
@@ -38,10 +42,8 @@ Route::get('/dashboard', function () {
         $recentProducts = \App\Models\Product::latest()->take(5)->get();
         $lowStockProducts = \App\Models\Product::whereRaw('quantity <= min_stock')->latest()->take(5)->get();
         
-        // ==========================================
-        // XỬ LÝ DỮ LIỆU BIỂU ĐỒ 6 THÁNG GẦN NHẤT
-        // ==========================================
-       $chartLabels = [];
+        // XỬ LÝ DỮ LIỆU BIỂU ĐỒ 7 NGÀY GẦN NHẤT
+        $chartLabels = [];
         $chartReceiptData = [];
         $chartIssueData = [];
 
@@ -57,9 +59,21 @@ Route::get('/dashboard', function () {
             $chartIssueData[] = Issue::whereDate('issue_date', $date)->count();
         }
 
+        // ==========================================
+        // 3. LOGIC ĐỘC QUYỀN CHỈ DÀNH CHO ADMIN
+        // ==========================================
+        $driverUpdates = null; // Khởi tạo mặc định để không bị lỗi undefined variable
+        if ($user->role == 'admin') {
+            $driverUpdates = \App\Models\Issue::whereNotNull('status')
+                ->whereIn('status', ['hoan_thanh', 'tam_hoan'])
+                ->orderBy('updated_at', 'desc')
+                ->take(5)
+                ->get();
+        }
+
         return view('dashboard', compact(
             'recentReceipts', 'recentIssues', 'recentProducts', 'lowStockProducts',
-            'chartLabels', 'chartReceiptData', 'chartIssueData' // Truyền dữ liệu biểu đồ ra View
+            'chartLabels', 'chartReceiptData', 'chartIssueData', 'driverUpdates' // Đã truyền thêm driverUpdates ra View
         ));
     }
 })->middleware(['auth', 'verified'])->name('dashboard');
