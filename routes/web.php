@@ -23,13 +23,17 @@ Route::get('/dashboard', function () {
     // 1. DÀNH CHO TÀI XẾ
     // ==========================================
     if ($user->role == 'driver') {
+        // ĐÃ FIX: Cho phép tài xế thấy đơn đang giao, tạm hoãn và đơn mới (NULL)
         $pendingDeliveries = \App\Models\Issue::where('tai_xe_id', $user->id)
-            ->whereIn('status', ['dang_giao', 'tam_hoan'])->latest()->take(5)->get();
+            ->where(function($query) {
+                $query->where('status', '!=', 'hoan_thanh')->orWhereNull('status');
+            })->latest()->take(5)->get();
+            
         $completedDeliveries = \App\Models\Issue::where('tai_xe_id', $user->id)
             ->where('status', 'hoan_thanh')->latest()->take(5)->get();
 
         return view('dashboard', compact('pendingDeliveries', 'completedDeliveries'));
-    } 
+    }
     
     // ==========================================
     // 2. DÀNH CHO THỦ KHO (MANAGER) & ADMIN
