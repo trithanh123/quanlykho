@@ -119,7 +119,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/driver/confirm/{id}', [\App\Http\Controllers\DriverController::class, 'confirm'])->name('driver.confirm');
     Route::get('/driver/history', [\App\Http\Controllers\DriverController::class, 'history'])->name('driver.history');
     Route::post('/driver/postpone/{id}', [\App\Http\Controllers\DriverController::class, 'postpone'])->name('driver.postpone');
-
+    Route::post('/driver/start/{id}', [\App\Http\Controllers\DriverController::class, 'startDelivery'])->name('driver.start');
     // --- KHU VỰC CỦA THỦ KHO (MANAGER) ---
     Route::get('/manager/inventory', [\App\Http\Controllers\Manager\InventoryController::class, 'index'])->name('manager.inventory.index');
     Route::get('/manager/inventory/export', [\App\Http\Controllers\Manager\InventoryController::class, 'exportCsv'])->name('manager.inventory.export');

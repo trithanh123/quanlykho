@@ -51,25 +51,49 @@
                             @endif
 
                             <div class="mt-2 pt-5 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
-                                <form action="{{ route('driver.confirm', $issue->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn đã giao thành công đơn hàng này?');" class="flex-1">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors flex justify-center items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-                                        Xác nhận Đã Giao
-                                    </button>
-                                </form>
+                                
+                                {{-- 1. NẾU ĐƠN MỚI NHẬN (NULL): CHỈ HIỆN NÚT "XÁC NHẬN ĐANG GIAO" --}}
+                                @if(is_null($issue->status))
+                                    <form action="{{ route('driver.start', $issue->id) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                                            Xác nhận Đang Giao
+                                        </button>
+                                    </form>
+                                
+                                {{-- 2. NẾU ĐANG TRÊN ĐƯỜNG (DANG_GIAO): HIỆN NÚT "GIAO THÀNH CÔNG" --}}
+                                @elseif($issue->status == 'dang_giao')
+                                    <form action="{{ route('driver.confirm', $issue->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn đã giao thành công đơn hàng này?');" class="flex-1">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-md transition-colors flex justify-center items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                            Xác nhận Giao Thành Công
+                                        </button>
+                                    </form>
+                                @endif
 
+                                {{-- 3. NÚT TẠM HOÃN / DỜI LỊCH CỦA TÀI XẾ --}}
                                 @if($issue->status != 'tam_hoan')
                                     <form action="{{ route('driver.postpone', $issue->id) }}" method="POST" onsubmit="return handlePostpone(event, this);" class="flex-1">
                                         @csrf
                                         <input type="hidden" name="ly_do" class="ly_do_input">
                                         <button type="submit" class="w-full bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 px-4 rounded-lg border border-gray-300 transition-colors flex justify-center items-center shadow-sm">
-                                            Khách vắng / Dời lịch
+                                            ⚠️ Khách vắng / Dời lịch
                                         </button>
                                     </form>
                                 @else
-                                    <div class="flex-1 bg-orange-50 text-orange-700 font-bold py-3 px-4 rounded-lg border border-orange-200 text-center flex justify-center items-center">
-                                        🕒 Đã dời lịch!
+                                    <div class="flex-1 flex flex-col sm:flex-row gap-2">
+                                        <div class="flex-1 bg-orange-50 text-orange-700 font-bold py-3 px-4 rounded-lg border border-orange-200 text-center flex justify-center items-center">
+                                            🕒 Đã dời lịch!
+                                        </div>
+                                        {{-- Tính năng phụ: Nếu đã hoãn nhưng tài xế muốn thử giao lại thì bấm nút này --}}
+                                        <form action="{{ route('driver.start', $issue->id) }}" method="POST" class="sm:w-auto w-full">
+                                            @csrf
+                                            <button type="submit" class="w-full h-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-3 px-4 rounded-lg border border-blue-300 transition-colors">
+                                                Giao lại
+                                            </button>
+                                        </form>
                                     </div>
                                 @endif
                             </div>

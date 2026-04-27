@@ -24,7 +24,17 @@ class DriverController extends Controller
 
         return view('driver.index', compact('assignedIssues'));
     }
+    // Nút XÁC NHẬN BẮT ĐẦU ĐI GIAO
+    public function startDelivery($id)
+    {
+        $issue = Issue::where('tai_xe_id', Auth::id())->findOrFail($id);
+        
+        // Cập nhật trạng thái thành đang đi giao trên đường
+        $issue->status = 'dang_giao';
+        $issue->save();
 
+        return redirect()->back()->with('success', 'Đã cập nhật trạng thái: Đang trên đường giao!');
+    }
     // 2. Nút XÁC NHẬN GIAO HÀNG
     public function confirm($id)
     {

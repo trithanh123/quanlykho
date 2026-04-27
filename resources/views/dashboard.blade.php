@@ -183,12 +183,15 @@
                 {{-- ========================================================================= --}}
             {{-- 1.5 BÁO CÁO TRẠNG THÁI GIAO HÀNG (CHỈ DÀNH CHO ADMIN)                       --}}
             {{-- ========================================================================= --}}
-            @if($role == 'admin')
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-6 border-l-4 border-blue-500">
+            {{-- ========================================================================= --}}
+            {{-- BÁO CÁO TIẾN ĐỘ GIAO HÀNG CHI TIẾT TỪ TÀI XẾ (CHỈ DÀNH CHO ADMIN)       --}}
+            {{-- ========================================================================= --}}
+            @if($role == 'admin') 
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-6 border-l-4 border-blue-500">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-lg font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider flex items-center">
-                                <span class="mr-2">🚚</span> Cập nhật giao hàng từ Tài xế
+                                <span class="mr-2">🚚</span> Báo cáo tiến độ giao hàng
                             </h3>
                         </div>
                         <div class="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-xl">
@@ -196,33 +199,48 @@
                                 <thead class="bg-gray-50 dark:bg-gray-900">
                                     <tr>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Mã phiếu</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Tài xế phụ trách</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Trạng thái</th>
-                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Thời gian xác nhận</th>
+                                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Cập nhật cuối</th>
                                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Ghi chú / Lý do</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                     @forelse($driverUpdates ?? [] as $update)
                                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition duration-150">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600 dark:text-indigo-400">{{ $update->issue_code }}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-indigo-600 dark:text-indigo-400">
+                                                {{ $update->issue_code }}
+                                            </td>
+                                            
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-700 dark:text-gray-300">
+                                                @php
+                                                    $driver = \App\Models\User::find($update->tai_xe_id);
+                                                @endphp
+                                                {{ $driver ? $driver->name : 'Chưa rõ' }}
+                                            </td>
+
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 @if($update->status == 'hoan_thanh')
-                                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold border border-green-200">✅ Đã giao</span>
+                                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold border border-green-200">✅ Đã giao thành công</span>
                                                 @elseif($update->status == 'tam_hoan')
-                                                    <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold border border-orange-200">⚠️ Tạm hoãn</span>
+                                                    <span class="bg-orange-100 text-orange-800 px-2 py-1 rounded text-xs font-bold border border-orange-200">⚠️ Tạm hoãn / Dời lịch</span>
+                                                @elseif($update->status == 'dang_giao')
+                                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold border border-blue-200">🚚 Đang đi giao</span>
                                                 @else
-                                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-bold border border-blue-200">Đang giao</span>
+                                                    <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs font-bold border border-gray-300">📦 Mới phân công (Chờ nhận)</span>
                                                 @endif
                                             </td>
+
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700 dark:text-gray-300">
                                                 {{ \Carbon\Carbon::parse($update->updated_at)->format('H:i - d/m/Y') }}
                                             </td>
-                                            <td class="px-6 py-4 text-sm text-red-500 font-medium italic truncate">
-                                                {{ $update->note ?? 'Không có' }}
+
+                                            <td class="px-6 py-4 text-sm font-medium italic truncate max-w-xs {{ $update->status == 'tam_hoan' ? 'text-red-500' : 'text-gray-500' }}" title="{{ $update->note }}">
+                                                {{ $update->note ?? 'Không có ghi chú' }}
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr><td colspan="4" class="px-6 py-8 text-center text-gray-400">Chưa có cập nhật trạng thái nào từ tài xế.</td></tr>
+                                        <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Chưa có dữ liệu tiến độ giao hàng nào.</td></tr>
                                     @endforelse
                                 </tbody>
                             </table>
