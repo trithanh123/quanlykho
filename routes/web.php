@@ -69,7 +69,7 @@ Route::get('/dashboard', function () {
         $driverUpdates = null; // Khởi tạo mặc định để không bị lỗi undefined variable
         if ($user->role == 'admin') {
             $driverUpdates = \App\Models\Issue::whereNotNull('status')
-                ->whereIn('status', ['hoan_thanh', 'tam_hoan'])
+                ->whereIn('status', ['dang_giao','hoan_thanh', 'tam_hoan'])
                 ->orderBy('updated_at', 'desc')
                 ->take(5)
                 ->get();
