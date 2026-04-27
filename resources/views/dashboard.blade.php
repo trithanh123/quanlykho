@@ -263,9 +263,9 @@
             @endif
 
             {{-- ========================================================================= --}}
-            {{-- 3. GIAO DIỆN TÀI XẾ (DÀNH CHO ADMIN VÀ TÀI XẾ)                              --}}
+            {{-- 3. GIAO DIỆN TÀI XẾ (DÀNH CHOTÀI XẾ)                              --}}
             {{-- ========================================================================= --}}
-            @if(in_array($role, ['admin', 'driver']))
+            @if(in_array($role, ['driver']))
                 
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg mt-6">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
