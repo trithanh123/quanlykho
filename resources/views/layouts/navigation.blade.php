@@ -28,7 +28,7 @@
                         </x-nav-link>
                         
                         <x-nav-link :href="route('categories.index')" :active="request()->routeIs('categories.*')">
-                            {{ __('Quản Lý kho và Nhóm hàng') }}
+                            {{ __('Quản Lý Nhóm hàng') }}
                         </x-nav-link>
 
                         <x-nav-link :href="route('admin.transactions.index')" :active="false" class="text-indigo-600 font-bold border-indigo-300">
