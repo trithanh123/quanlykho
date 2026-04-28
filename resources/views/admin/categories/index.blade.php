@@ -19,11 +19,11 @@
                         class="w-1/2 py-4 px-1 text-center border-b-2 font-bold text-sm transition-all duration-200 rounded-tl-lg">
                     📦 Quản lý Nhóm hàng (Danh mục)
                 </button>
-                <button @click="tab = 'warehouses'" 
+                <!-- <button @click="tab = 'warehouses'" 
                         :class="tab === 'warehouses' ? 'border-indigo-500 text-indigo-600 bg-indigo-50' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'"
                         class="w-1/2 py-4 px-1 text-center border-b-2 font-bold text-sm transition-all duration-200 rounded-tr-lg">
                     🏠 Quản lý Kho bãi
-                </button>
+                </button> -->
             </div>
 
             <div x-show="tab === 'categories'" x-transition>
