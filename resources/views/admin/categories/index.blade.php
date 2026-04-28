@@ -6,7 +6,7 @@
             <span class="text-2xl mr-2">🏢</span> 
             THIẾT LẬP HỆ THỐNG KHO & NHÓM HÀNG
         </h2>
-        <p class="text-sm text-gray-500 mt-1 font-medium ml-9"> Danh sách kho bãi và sơ đồ phân loại hàng hóa</p>
+        <p class="text-sm text-gray-500 mt-1 font-medium ml-9"> Danh sách sơ đồ phân loại hàng hóa</p>
     </div>
 </x-slot>
 
