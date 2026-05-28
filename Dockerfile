@@ -48,7 +48,6 @@ sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${RENDER_PORT}>/" /etc/apache2/site
 \n\
 php artisan config:cache\n\
 php artisan view:cache\n\
-php artisan migrate --force\n\
 \n\
 apache2-foreground\n' > /usr/local/bin/start-app.sh \
     && chmod +x /usr/local/bin/start-app.sh
