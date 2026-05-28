@@ -47,7 +47,6 @@ sed -i "s/Listen 80/Listen ${RENDER_PORT}/" /etc/apache2/ports.conf\n\
 sed -i "s/<VirtualHost \*:80>/<VirtualHost *:${RENDER_PORT}>/" /etc/apache2/sites-available/*.conf\n\
 \n\
 php artisan config:cache\n\
-php artisan route:cache\n\
 php artisan view:cache\n\
 php artisan migrate --force\n\
 \n\
