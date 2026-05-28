@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    protected $guarded = [];
    // Đây chính là "Chìa khóa" mở cổng cho lệnh create() nè:
     protected $fillable = [
         'name', 'sku', 'category_id', 'price', 'quantity', 'unit', 'description', 'image'
@@ -16,4 +17,5 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    
 }

@@ -38,11 +38,13 @@ class IssueController extends Controller
             DB::beginTransaction();
 
             // 2. Tạo phiếu xuất (Issue)
+            // 1. Tạo Phiếu Xuất
             $issue = Issue::create([
-                'issue_code' => '#IS-' . strtoupper(uniqid()), 
-                'user_id' => Auth::id(), 
-                'issue_date' => now(),
-                'note' => $data['note'] ?? null, // Dùng $data thay vì $request
+                'note' => $request->input('note', 'Xuất hàng khỏi kho'),
+                'user_id' => 1,
+                'issue_code' => 'PX' . time(), // Tự tạo mã phiếu ngẫu nhiên
+                'tai_xe_id' => 1,              // Gán đại tài xế số 1
+                'status' => 1                  // Trạng thái thành công
             ]);
 
             // 3. Lưu chi tiết phiếu xuất và Cập nhật tồn kho

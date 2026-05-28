@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use Cloudinary\Cloudinary; // Đã thêm Cloudinary
+use Cloudinary\Cloudinary; 
 
 class ProductController extends Controller
 {
@@ -23,7 +23,6 @@ class ProductController extends Controller
 
     public function store(\App\Http\Requests\StoreProductRequest $request)
     {
-        // 1. Kiểm tra dữ liệu
         $request->validate([
             'name' => 'required|string|max:255',
             'sku' => 'required|string|unique:products,sku',
@@ -32,11 +31,9 @@ class ProductController extends Controller
             'quantity' => 'required|integer|min:1',
             'image' => 'nullable|mimes:jpg,jpeg,png,gif,webp,jfif|max:5120',
         ], [
-            'price.min' => 'Giá bán không được nhỏ hơn 0.', // Tui gộp báo lỗi của ông lên đây cho gọn
+            'price.min' => 'Giá bán không được nhỏ hơn 0.', 
             'quantity.min' => 'Số lượng không được nhỏ hơn 0.',
         ]);
-
-        // 2. Xử lý file ảnh ĐẨY LÊN CLOUDINARY
         $imagePath = null;
         if ($request->hasFile('image')) {
             $cloudinary = new Cloudinary(env('CLOUDINARY_URL'));
@@ -44,10 +41,8 @@ class ProductController extends Controller
                 $request->file('image')->getRealPath(),
                 ['folder' => 'warehouse_products']
             );
-            $imagePath = $uploadedImage['secure_url']; // Lấy link trực tiếp
-        }
-
-        // 3. Cất tất cả vào Database
+            $imagePath = $uploadedImage['secure_url'];         
+            }
         Product::create([
             'name' => $request->name,
             'sku' => $request->sku,
@@ -122,4 +117,5 @@ class ProductController extends Controller
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Đã xóa sản phẩm thành công rồi ông nhé!');
     }
+    
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Receipt extends Model
 {
-    protected $fillable = ['user_id', 'note'];
+    protected $guarded = [];
 
     // Thiết lập mối quan hệ: 1 phiếu nhập thuộc về 1 người dùng (Thủ kho)
     public function user()
